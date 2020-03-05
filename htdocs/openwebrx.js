@@ -2739,3 +2739,10 @@ function secondary_demod_waterfall_set_zoom(low_cut, high_cut)
     secondary_demod_canvases.map((x)=>{$(x).css("left",secondary_demod_canvas_left+"px").css("width",secondary_demod_canvas_width+"px");});
     secondary_demod_update_channel_freq_from_event();
 }
+
+function update_center_freq()
+{
+    obj = document.getElementById("openwebrx-center-freq-input");
+    val = Math.round(parseFloat(obj.value) * 1e6);
+    webrx_set_param("center_freq", val);
+}

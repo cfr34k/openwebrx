@@ -68,6 +68,12 @@
                 <a id="openwebrx-rx-details-arrow-up" onclick="toggle_rx_photo();"><img src="gfx/openwebrx-rx-details-arrow-up.png" /></a>
                 <a id="openwebrx-rx-details-arrow-down" onclick="toggle_rx_photo();"><img src="gfx/openwebrx-rx-details-arrow.png" /></a>
             </div>
+            <div id="openwebrx-center-freq">
+              <form>
+                <input id="openwebrx-center-freq-input" type="text" value="%[CENTER_FREQ]" />
+                <input type="button" value="Set Frequency [MHz]" onclick="update_center_freq();" />
+              </form>
+            </div>
             <section id="openwebrx-main-buttons">
                 <ul>
                     <li onmouseup="toggle_panel('openwebrx-panel-status');"><img src="gfx/openwebrx-panel-status.png" /><br/>Status</li>

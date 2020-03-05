@@ -234,6 +234,13 @@ def bcastmsg_thread_function():
             clients[i].bcastmsg="MSG cpu_usage={0} clients={1}".format(int(cpu_usage*100),len(clients))
         cmr()
 
+def bcastmsg_center_freq():
+	global clients
+	cma("center_freq_bcast")
+	for i in range(0,len(clients)):
+		clients[i].bcastmsg="MSG center_freq={0} setup".format(cfg.shown_center_freq)
+	cmr()
+
 def mutex_test_thread_function():
     global clients_mutex, lock_try_time
     while True:
@@ -397,6 +404,10 @@ def close_client(i, use_mutex=True):
     del clients[i]
     if use_mutex: cmr()
 
+def source_change_freq(new_freq):
+    print("CHANGE FREQ: {}".format(new_freq))
+    subprocess.call(cfg.change_freq_command + " {:d}".format(new_freq), shell=True)
+
 # http://www.codeproject.com/Articles/462525/Simple-HTTP-Server-and-Client-in-Python
 # some ideas are used from the artice above
 
@@ -552,7 +563,13 @@ class WebRXHandler(BaseHTTPRequestHandler):
                                 filter_limit=dsp.get_output_rate()/2
                                 for pair in pairs:
                                     param_name, param_value = pair.split("=")
-                                    if param_name == "low_cut" and -filter_limit <= int(param_value) <= filter_limit:
+                                    if param_name == "center_freq" and cfg.start_rtl_thread:
+                                        cfg.center_freq = int(param_value) + cfg.mixer_freq
+                                        cfg.shown_center_freq = int(param_value)
+                                        source_change_freq(cfg.center_freq)
+                                        bcastmsg_center_freq()
+                                        break # send broadcast message before processing other commands
+                                    elif param_name == "low_cut" and -filter_limit <= int(param_value) <= filter_limit:
                                         bpf_set=True
                                         new_bpf[0]=int(param_value)
                                     elif param_name == "high_cut" and -filter_limit <= int(param_value) <= filter_limit:
@@ -683,6 +700,7 @@ class WebRXHandler(BaseHTTPRequestHandler):
                         ("%[AUDIO_BUFSIZE]",str(cfg.client_audio_buffer_size)),
                         ("%[START_OFFSET_FREQ]",str(cfg.start_freq-cfg.center_freq)),
                         ("%[START_MOD]",cfg.start_mod),
+                        ("%[CENTER_FREQ]",str(cfg.shown_center_freq/1e6)),
                         ("%[WATERFALL_COLORS]",cfg.waterfall_colors),
                         ("%[WATERFALL_MIN_LEVEL]",str(cfg.waterfall_min_level)),
                         ("%[WATERFALL_MAX_LEVEL]",str(cfg.waterfall_max_level)),

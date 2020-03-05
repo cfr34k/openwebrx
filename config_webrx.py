@@ -74,6 +74,7 @@ fft_voverlap_factor=0.3 #If fft_voverlap_factor is above 0, multiple FFTs will b
 # samp_rate = 250000
 samp_rate = 2400000
 center_freq = 144250000
+mixer_freq = 0 # Frequency of an upconverter, in Hz
 rf_gain = 5 #in dB. For an RTL-SDR, rf_gain=0 will set the tuner to auto gain mode, else it will be in manual gain mode.
 ppm = 0
 
@@ -105,6 +106,7 @@ Note: if you experience audio underruns while CPU usage is 100%, you can:
 
 # >> RTL-SDR via rtl_sdr
 start_rtl_command="rtl_sdr -s {samp_rate} -f {center_freq} -p {ppm} -g {rf_gain} -".format(rf_gain=rf_gain, center_freq=center_freq, samp_rate=samp_rate, ppm=ppm)
+change_freq_command="./swradio_newfreq.sh" # called with one parameter: new center frequency
 format_conversion="csdr convert_u8_f"
 
 #lna_gain=8
@@ -156,7 +158,7 @@ To use a HackRF, compile the HackRF host tools from its "stdout" branch:
 
 # ==== Misc settings ====
 
-shown_center_freq = center_freq #you can change this if you use an upconverter
+shown_center_freq = center_freq - mixer_freq # change mixer_freq above if you use an upconverter
 
 client_audio_buffer_size = 5
 #increasing client_audio_buffer_size will:
