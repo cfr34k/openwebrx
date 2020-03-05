@@ -71,7 +71,7 @@
             <div id="openwebrx-center-freq">
               <form>
                 <input id="openwebrx-center-freq-input" type="text" value="%[CENTER_FREQ]" />
-                <input type="button" value="Set Frequency [MHz]" onclick="update_center_freq();" />
+                <input type="submit" value="Set Frequency [MHz]" onclick="update_center_freq(); return false;" />
               </form>
             </div>
             <section id="openwebrx-main-buttons">
