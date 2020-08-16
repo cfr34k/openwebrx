@@ -24,6 +24,7 @@ class FeatureDetector(object):
         "rtl_sdr": ["rtl_connector"],
         "rtl_sdr_soapy": ["soapy_connector", "soapy_rtl_sdr"],
         "sdrplay": ["soapy_connector", "soapy_sdrplay"],
+        "sdrplay_swradio": [],
         "hackrf": ["soapy_connector", "soapy_hackrf"],
         "perseussdr": ["perseustest"],
         "airspy": ["soapy_connector", "soapy_airspy"],
